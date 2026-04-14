@@ -1,27 +1,11 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { useState } from "react";
+import { submitCryptic } from "./actions";
 
 export default function Home() {
   const [value, setValue] = useState("");
   const [submittedValue, setSubmittedValue] = useState<string | null>(null);
-  const [shouldCrash, setShouldCrash] = useState(false);
-
-  if (shouldCrash) {
-    throw new Error("E_X7A9: Null vector collapsed in lexical manifold.");
-  }
-
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    if (!value.trim()) {
-      setShouldCrash(true);
-      return;
-    }
-
-    setShouldCrash(false);
-    setSubmittedValue(value.trim());
-  };
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-zinc-50 px-6 font-sans dark:bg-black">
@@ -29,9 +13,16 @@ export default function Home() {
         <h1 className="mb-6 text-2xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
           Cryptic Submission Form
         </h1>
-        <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
+        <form
+          className="flex flex-col gap-4"
+          action={async (formData) => {
+            const result = await submitCryptic(formData);
+            setSubmittedValue(result.value);
+          }}
+        >
           <input
             type="text"
+            name="message"
             value={value}
             onChange={(event) => {
               setValue(event.target.value);

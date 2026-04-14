@@ -13,10 +13,10 @@ export default function ErrorPage({ error, reset }: ErrorPageProps) {
           Critical Frontend Fault
         </p>
         <h1 className="mb-4 text-3xl font-semibold text-red-300">
-          UI Execution Halted
+          Application Execution Halted
         </h1>
         <p className="mb-6 text-zinc-300">
-          The interface encountered a non-recoverable runtime anomaly.
+          A non-recoverable runtime anomaly occurred.
         </p>
         <pre className="mb-6 overflow-x-auto rounded-lg border border-zinc-800 bg-zinc-900 p-4 text-sm text-red-200">
           {error.message}

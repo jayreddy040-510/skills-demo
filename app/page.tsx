@@ -6,6 +6,7 @@ import { submitCryptic } from "./actions";
 export default function Home() {
   const [value, setValue] = useState("");
   const [submittedValue, setSubmittedValue] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-zinc-50 px-6 font-sans dark:bg-black">
@@ -17,7 +18,14 @@ export default function Home() {
           className="flex flex-col gap-4"
           action={async (formData) => {
             const result = await submitCryptic(formData);
-            setSubmittedValue(result.value);
+            if (result.ok) {
+              setErrorMessage(null);
+              setSubmittedValue(result.value);
+              return;
+            }
+
+            setSubmittedValue(null);
+            setErrorMessage(result.error);
           }}
         >
           <input
@@ -26,6 +34,9 @@ export default function Home() {
             value={value}
             onChange={(event) => {
               setValue(event.target.value);
+              if (errorMessage) {
+                setErrorMessage(null);
+              }
               if (submittedValue) {
                 setSubmittedValue(null);
               }
@@ -40,6 +51,11 @@ export default function Home() {
             Submit
           </button>
         </form>
+        {errorMessage && (
+          <div className="mt-4 rounded-lg border border-rose-300 bg-rose-50 px-4 py-3 text-rose-800 dark:border-rose-800 dark:bg-rose-950/40 dark:text-rose-300">
+            {errorMessage}
+          </div>
+        )}
         {submittedValue && (
           <div className="mt-4 rounded-lg border border-emerald-300 bg-emerald-50 px-4 py-3 text-emerald-800 dark:border-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300">
             Submission accepted: <span className="font-semibold">{submittedValue}</span>

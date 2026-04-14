@@ -10,8 +10,14 @@ export async function submitCryptic(formData: FormData) {
       hasMessageField: formData.has("message"),
       timestamp: new Date().toISOString(),
     });
-    throw new Error("E_X7A9: Null vector collapsed in lexical manifold.");
+    return {
+      ok: false as const,
+      error: "Please enter a message before submitting.",
+    };
   }
 
-  return { value };
+  return {
+    ok: true as const,
+    value,
+  };
 }

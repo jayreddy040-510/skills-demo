@@ -6,6 +6,7 @@ import { submitCryptic } from "./actions";
 export default function Home() {
   const [value, setValue] = useState("");
   const [submittedValue, setSubmittedValue] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-zinc-50 px-6 font-sans dark:bg-black">
@@ -16,8 +17,14 @@ export default function Home() {
         <form
           className="flex flex-col gap-4"
           action={async (formData) => {
+            setError(null);
             const result = await submitCryptic(formData);
-            setSubmittedValue(result.value);
+            if (result.ok) {
+              setSubmittedValue(result.value);
+            } else {
+              setSubmittedValue(null);
+              setError(result.error);
+            }
           }}
         >
           <input
@@ -26,9 +33,8 @@ export default function Home() {
             value={value}
             onChange={(event) => {
               setValue(event.target.value);
-              if (submittedValue) {
-                setSubmittedValue(null);
-              }
+              if (submittedValue) setSubmittedValue(null);
+              if (error) setError(null);
             }}
             placeholder="Type something..."
             className="h-12 rounded-lg border border-zinc-300 px-4 text-base text-zinc-900 outline-none transition focus:border-zinc-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
@@ -40,6 +46,11 @@ export default function Home() {
             Submit
           </button>
         </form>
+        {error && (
+          <div className="mt-4 rounded-lg border border-red-300 bg-red-50 px-4 py-3 text-red-800 dark:border-red-800 dark:bg-red-950/40 dark:text-red-300">
+            {error}
+          </div>
+        )}
         {submittedValue && (
           <div className="mt-4 rounded-lg border border-emerald-300 bg-emerald-50 px-4 py-3 text-emerald-800 dark:border-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300">
             Submission accepted: <span className="font-semibold">{submittedValue}</span>

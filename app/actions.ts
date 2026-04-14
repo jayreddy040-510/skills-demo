@@ -1,17 +1,20 @@
 "use server";
 
-export async function submitCryptic(formData: FormData) {
+export type SubmitCrypticResult =
+  | { ok: true; value: string }
+  | { ok: false; code: "E_X7A9"; message: string };
+
+export async function submitCryptic(formData: FormData): Promise<SubmitCrypticResult> {
   const rawValue = formData.get("message");
   const value = typeof rawValue === "string" ? rawValue.trim() : "";
 
   if (!value) {
-    console.error("[submitCryptic] empty submission detected", {
+    return {
+      ok: false,
       code: "E_X7A9",
-      hasMessageField: formData.has("message"),
-      timestamp: new Date().toISOString(),
-    });
-    throw new Error("E_X7A9: Null vector collapsed in lexical manifold.");
+      message: "E_X7A9: Null vector collapsed in lexical manifold.",
+    };
   }
 
-  return { value };
+  return { ok: true, value };
 }

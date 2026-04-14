@@ -5,14 +5,21 @@ import { FormEvent, useState } from "react";
 export default function Home() {
   const [value, setValue] = useState("");
   const [submittedValue, setSubmittedValue] = useState<string | null>(null);
+  const [shouldCrash, setShouldCrash] = useState(false);
+
+  if (shouldCrash) {
+    throw new Error("E_X7A9: Null vector collapsed in lexical manifold.");
+  }
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     if (!value.trim()) {
-      throw new Error("E_X7A9: Null vector collapsed in lexical manifold.");
+      setShouldCrash(true);
+      return;
     }
 
+    setShouldCrash(false);
     setSubmittedValue(value.trim());
   };
 
